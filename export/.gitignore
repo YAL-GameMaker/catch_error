@@ -1,0 +1,8 @@
+catch_error-for-GMS1/*
+
+catch_error-for-GMS2/*
+!catch_error-for-GMS2/assetpackage.yy
+
+catch_error-for-GMS2.3+/*
+!catch_error-for-GMS2.3+/catch_error_23.yyp
+!catch_error-for-GMS2.3+/metadata.json

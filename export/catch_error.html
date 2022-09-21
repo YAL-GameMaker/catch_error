@@ -1,0 +1,757 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>catch_error documentation</title>
+<meta name="viewport" content="width=device-width" />
+<meta name="livenode" content="#doc" />
+<meta property="theme-color" content="<section><header>FFF037</header><article></article></section>" />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="en_us" />
+<meta property="og:site_name" content="YellowAfterlife" />
+<meta property="og:title" content="catch_error documentation" />
+<script type="text/javascript">
+if (document.location.host == "yal.cc" && location.protocol == "http:") {
+	document.location.protocol = "https:";
+}
+</script>
+<style type="text/css">body, #doc tt, #doc code {
+	font: 15px 'Open Sans', sans-serif;
+	line-height: 1.35;
+}
+body {
+	margin: 0;
+}
+.main {
+	width: 100%;
+	min-height: 100%;
+	min-height: 100vh;
+	background-color: #f5f7f9;
+}
+.page {
+	max-width: 656px;
+	background: #ffffff;
+	margin: 0 auto;
+	padding: 8px;
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+	min-height: 100%;
+	min-height: 100vh;
+	box-sizing: border-box;
+}
+.page > p:first-child {
+	margin-top: 0;
+}
+#doc, #doc ul, #doc ol {
+	padding-left: 0;
+	margin: 0;
+}
+#doc article > ul, #doc article > ol {
+	padding-left: 20px;
+}
+#doc article ul li {
+	list-style: disc;
+	list-style-image: url('data:image/svg+xml;base256,<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" width="20px" height="1em" viewBox="0 0 20px 1em"><circle cx="17px" cy="0.675em" r="2px"/></svg>'); 
+}
+
+#doc header {
+	margin: 0;
+	font-weight: 700;
+	font-size: 100%;
+	color: #458;
+	border-left: 2px solid #f3f3f3;/* #f9f9f9*/
+	padding-left: 4px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	cursor: pointer;
+}
+#doc header a {
+	outline: none;
+	text-decoration: none;
+	color: #458;
+}
+#doc header::before {
+	display: inline-block;
+	content: "+";
+	font: 12px monospace;
+	border: 1px solid #458;
+	line-height: 11px;
+	height: 11px;
+	width: 11px;
+	text-align: center;
+	border-radius: 50%;
+	margin-right: 4px;
+	vertical-align: middle;
+	position: relative;
+	top: -1px;
+}
+#doc section.open > header::before {
+	content: "-";
+}
+#doc section.empty > header::before {
+	content: " "; /*"·"*/
+}
+#doc header:hover {
+	border-left-color: #f3f3f3;
+	background: #f3f3f3;
+}
+#doc header .ret-arrow {
+	font-weight: normal;
+	margin: 0 0.1em;
+}
+
+#doc a.broken {
+	color: red;
+}
+#doc p, .intro p {
+	margin: 0;
+}
+#doc p + p, .intro p + p, #doc p.pad, .display-controls {
+	margin-top: 0.5em;
+}
+#doc img {
+	max-width: 100%;
+}
+#doc h3 {
+	margin: 0.25em 0;
+	font-size: 125%;
+	font-weight: normal;
+	border-bottom: 1px solid #ccc;
+}
+
+#doc article, #doc ul {
+	padding-left: 20px;
+	border-left: 2px solid #f3f3f3;
+}
+#doc article {
+	padding-top: 0.25em;
+	padding-bottom: 0.5em;
+}
+#doc tt {
+	font-weight: bold;
+}
+#doc code {
+	display: inline-block;
+	background: #FFFBE4;
+	font-family: Consolas, Ubuntu Mono, Dejavu Sans Mono, Lucida Console, monospace;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 16px;
+	padding: 0 2px;
+	border: 1px solid #E6E0C4;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	max-width: 100%;
+	word-break: break-word;
+}
+
+#doc table {
+	border-spacing: 0;
+	color: currentColor;
+}
+#doc table, #doc table td, #doc table th {
+	border: 1px solid #f3f3f3;
+}
+#doc table td, #doc table th {
+	padding: 0.1em 0.5em;
+}
+#doc pre {
+	font-family: Consolas, Dejavu Sans Mono, Segoe UI Mono, Ubuntu Mono, Lucida Console, monospace;
+	font-size: 9pt;
+	line-height: 1.25;
+	background: white;
+	padding: 4px 2px 4px 10px;
+	margin: 0;
+	-moz-tab-size: 4;
+	tab-size: 4;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+#doc pre a {
+	text-decoration: none;
+}
+#doc pre a:hover {
+	text-decoration: underline;
+}
+#doc abbr[title] {
+	text-decoration: underline;
+	-webkit-text-decoration-color: #bbb;
+	text-decoration-color: #bbb;
+	-webkit-text-decoration-style: double;
+	text-decoration-style: double;
+}
+#doc hr {
+	margin: 0.5em 0;
+	margin-right: 1em;
+	border: 0;
+	border-top: 2px dashed #f3f3f3;
+}
+#doc section + hr {
+	margin: 0;
+	height: 1em;
+	border: 1px solid #f3f3f3;
+	border-width: 1px 0 1px 0;
+}
+#doc section {
+	border-top: 1px solid #f3f3f3;
+	margin-top: 0.3em;
+}
+#doc section:first-child {
+	margin-top: 0em;
+}
+#doc section:last-child {
+	border-bottom: 1px solid #f3f3f3;
+}
+#doc section + section, #doc hr + section {
+	border-top: 0;
+	margin-top: 0;
+}
+#doc section + p {
+	border-top: 1px solid #f3f3f3;
+	padding-top: 0.3em;
+}
+/* delay display until load */
+#doc[ready] section:not(.open) > article {
+	display: none;
+}</style>
+<style type="text/css" id="night_css">#night { display: none }
+label[for="night"] {
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
+}
+#night:checked + .main {
+	background-color: #424242;
+}
+#night:checked + .main .page {
+	background-color: #1c1c1c;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	color: white;
+}
+#night:checked + .main a,
+#night:checked + .main a:visited,
+#night:checked + .main #doc header,
+#night:checked + .main label[for="night"] {
+	color: #9DEC76;
+}
+#night:checked + .main #doc header:before,
+#night:checked + .main #doc h3 {
+	border-color: #9DEC76
+}
+#night:checked + .main #doc header,
+#night:checked + .main #doc header:hover,
+#night:checked + .main #doc article,
+#night:checked + .main #doc section,
+#night:checked + .main #doc section + p,
+#night:checked + .main #doc hr,
+#night:checked + .main #doc ul,
+#night:checked + .main #doc table,
+#night:checked + .main #doc table td,
+#night:checked + .main #doc table th
+{
+	border-color: rgba(205,225,255,0.1);
+}
+#night:checked + .main #doc header:hover,
+#night:checked + .main #doc .asset:hover {
+	background: rgba(205,225,255,0.1);
+}
+#night:checked + .main article ul li {
+	list-style-image: url('data:image/svg+xml;base256,<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" width="20px" height="1em" viewBox="0 0 20px 1em"><circle cx="17px" cy="0.675em" r="2px" fill="white"/></svg>'); 
+}
+#night:checked + .main pre {
+	color: #cccccc;
+	background: #000000;
+	border: 1px solid #3E4757;
+}
+#night:checked + .main #doc code {
+	background-color: #000;
+	border-color: #5b7c9f;
+	color: white;
+}</style>
+<style type="text/css" id="print_css">@media print {
+	.main { background-color: transparent }
+	.display-controls { display: none; }
+	.page { width: 100%; box-shadow: none; }
+	#doc header::before,
+	#doc section.open header::before	{
+		content: "~";
+	}
+	#doc { display: inherit }
+	#doc section:not(.open) > article,
+	#doc[ready] section:not(.open) > article {
+		display: inherit;
+	}
+}</style>
+<noscript><style>#doc header::before {
+	content: "~";
+}
+#doc header:hover {
+	border-left-color: #f3f3f3;
+	background: inherit;
+}
+#doc { display: inherit }
+#doc section:not(.open) > article {
+	display: inherit;
+}</style></noscript>
+</head><body>
+<input type="checkbox" id="night" checked/>
+<div class="main boxtt">
+<script type="text/javascript">(function() {
+	var night = document.getElementById("night");
+	var path = "docmd night mode";
+	var ls = window.localStorage;
+	if (ls) {
+		night.checked = ls.getItem(path) == "true";
+		night.onchange = function(_) {
+			ls.setItem(path, "" + night.checked);
+		};
+	}
+})();</script>
+<main class="page">
+<section class="intro"><p>This is a function "cheat sheet" for the catch_error extension by YellowAfterlife.<br/>
+The extension can be acquired via <a href="https://yellowafterlife.itch.io/gamemaker-catch_error">itch.io</a>.<br/>
+A most up-to-date version of the manual is always <a href="https://yal.cc/docs/gm/catch_error/">available online</a>.
+</p><p>
+<b>NOTE:</b> Current (GMS≥2.3) versions of GameMaker now have native error handling
+(try-catch, exception_unhandler_handler) - this extension is no longer necessary.</p></section><section class="display-controls">
+Click on sections to expand/collapse them.<br>Quick display controls:
+<a href="#" onclick="opt_none(); return false">Categories</a>
+&middot; <a href="#" onclick="opt_list(); return false">Sections</a>
+&middot; <a href="#" onclick="opt_all(); return false">Everything</a>
+&middot; <label for="night">Toggle night mode</label><br/>
+</section><section id="doc">
+<!--<doc--><p><p>
+
+<style>
+.main { background-color: #899FC6 }
+.page { box-shadow: 0 0 8px rgba(0, 0, 0, 0.3) }
+#night:checked + .main { background-color: #405070 }
+#night:checked + .main .page { background-color: #1A202D }
+</style>
+
+
+
+
+
+
+
+
+
+</p><section><header>General functions</header><article><section><header id="catch_error_init"><a href="#catch_error_init" title="(permalink)">catch_error_init()</a></header><article><p>
+		Should be called for any other functions to have any effect.
+		</p><p>
+		Returns whether successful (<code>&gt; 0</code>).
+		</p><p>
+		Generally, can only fail is the DLL is missing/failed to load.
+	</p></article></section><section><header id="catch_error_is_ready"><a href="#catch_error_is_ready" title="(permalink)">catch_error_is_ready()</a></header><article><p>
+		Returns whether the initialization is done and everything is good to go.
+	</p></article></section><section><header id="catch_error_is_loaded"><a href="#catch_error_is_loaded" title="(permalink)">catch_error_is_loaded()</a></header><article><p>
+		Returns whether the DLL is successfully loaded.
+		</p><p>
+		If this is false, it is either missing entirely or the user has some serious setup issues.
+	</p></article></section></article></section><section><header id="catch_error_"><a href="#catch_error_" title="(permalink)">Error handling</a></header><article><section><header id="catch_error_normal_"><a href="#catch_error_normal_" title="(permalink)">Normal errors</a></header><article><p>
+		"Normal" errors are the ones that have an "ignore" button in their dialog.
+		</p><p>
+		These are captured consistently and pretty future-proof -
+		the only way the capture mechanism
+		could break is if error dialog handling gets rewritten completely.
+		</p><section><header id="catch_error_set_normal"><a href="#catch_error_set_normal" title="(permalink)">catch_error_set_normal(mode)</a></header><article><p>
+			Defines how non-fatal errors should be treated.
+			</p><p>
+			<code>mode</code> can be the following:
+			</p><section><header id="catch_error_normal_show"><a href="#catch_error_normal_show" title="(permalink)">catch_error_normal_show</a></header><article><p>
+				Shows the error box (default GM behaviour)
+			</p></article></section><section><header id="catch_error_normal_quit"><a href="#catch_error_normal_quit" title="(permalink)">catch_error_normal_quit</a></header><article><p>
+				Treats non-fatal errors as fatal
+			</p></article></section><section><header id="catch_error_normal_ignore"><a href="#catch_error_normal_ignore" title="(permalink)">catch_error_normal_ignore</a></header><article><p>
+				Ignores non-fatal errors completely
+			</p></article></section><section><header id="catch_error_normal_queue"><a href="#catch_error_normal_queue" title="(permalink)">catch_error_normal_queue</a></header><article><p>
+				Stores non-fatal errors for retrieval via <a href="#catch_error_dequeue">catch_error_dequeue</a>.
+			</p></article></section><p>
+			Examples:
+			</p><pre>
+catch_error_init();
+//
+catch_error_set_normal(catch_error_normal_ignore);
+show_error("1!", false); // (absolutely nothing happens)
+//
+catch_error_set_normal(catch_error_normal_queue);
+show_error("2!", false);
+show_debug_message("Last error: " + catch_error_dequeue());
+//
+catch_error_set_normal(catch_error_normal_show);
+show_error("3!", false); // (a normal error box appears)
+//
+catch_error_set_normal(catch_error_normal_quit);
+catch_error_set_prompt(catch_error_prompt_message, "It would appear like we've crashed");
+show_error("4!", false); // (a dialog box with above text appears)
+</pre></article></section><section><header id="catch_error_get_normal"><a href="#catch_error_get_normal" title="(permalink)">catch_error_get_normal()</a></header><article><p>
+			Returns the current mode for normal errors (as per constants).
+		</p></article></section></article></section><section><header id="catch_error_fatal_"><a href="#catch_error_fatal_" title="(permalink)">Fatal errors</a></header><article><p>
+		"Fatal" errors are the ones that do not have an "ignore" button in their dialogs.
+		</p><p>
+		Usually these put an end to your game, and you could let that happen
+		(either letting them show or passing them to a log file/external app, skipping the error box),
+		but the extension also offers an option to catch fatal errors as well.
+		</p><section><header id="catch_error_set_fatal"><a href="#catch_error_set_fatal" title="(permalink)">catch_error_set_fatal(mode)</a></header><article><p>
+			Defines how fatal errors should be treated.
+			</p><p>
+			<code>mode</code> can be the following:
+			</p><section><header id="catch_error_fatal_show"><a href="#catch_error_fatal_show" title="(permalink)">catch_error_fatal_show</a></header><article><p>
+				Shows the error box (default GM behaviour)
+			</p></article></section><section><header id="catch_error_fatal_quit"><a href="#catch_error_fatal_quit" title="(permalink)">catch_error_fatal_quit</a></header><article><p>
+				Skips the message box
+			</p></article></section><section><header id="catch_error_fatal_ignore"><a href="#catch_error_fatal_ignore" title="(permalink)">catch_error_fatal_ignore</a></header><article><p>
+				Ignores fatal errors completely
+			</p></article></section><section><header id="catch_error_fatal_queue"><a href="#catch_error_fatal_queue" title="(permalink)">catch_error_fatal_queue</a></header><article><p>
+				Stores fatal errors for retrieval via <a href="#catch_error_dequeue">catch_error_dequeue</a>.
+			</p></article></section><p>
+			Treating fatal errors as non-fatal is obviously a little more experimental.
+			While my tests indicate that the approach works with a variety of GMS/GMS2 versions
+			released in past two years, I would expect this to break once GMS2 gets built-in error
+			handling. But also, you wouldn't need this feature once that's a thing.
+			</p><p>
+			Example:
+			</p><pre>
+catch_error_init();
+catch_error_set_fatal(catch_error_fatal_quit);
+catch_error_set_dump_path("error.log");
+show_error("oh no", true); // quietly saves the error to `error.log` and exits
+</pre></article></section><section><header id="catch_error_get_fatal"><a href="#catch_error_get_fatal" title="(permalink)">catch_error_get_fatal(mode)</a></header><article><p>
+			Returns the current mode for fatal errors (as per constants).
+		</p></article></section></article></section><section><header id="catch_error_newer_"><a href="#catch_error_newer_" title="(permalink)">Newer-format fatal errors</a></header><article><p>
+		<b>Note:</b> as of 1.0.1 / Feb 10, 2019 update newer-format errors are handled together with
+		normal fatal errors, but you can still use these functions if you want to ignore them
+		entirely for some reason.
+		</p><section><header id="catch_error_newer_explain"><a href="#catch_error_newer_explain" title="(permalink)">Explanation</a></header><article><p>
+			So, here's a thing: recent (~2018) versions of GM:S/GMS2 have a <i>third</i> way of throwing errors.
+			If you've ever taken a peek at YYC <code>YYGML.h</code>, it's called <code>YYError</code> there.
+			</p><p>
+			It is used for "low-level" actions (like <code>+</code> or <code>inst.vari</code>) and a random few built-in
+			functions (like <code>vertex_begin</code>).
+			</p><p>
+			The deal with it is that its code goes like this (pseudocode):
+			</p><pre>
+global_flag_1 = true;
+if (global_flag_2) {
+	// (skip to the end of the current script/event if not using YYC)
+	return;
+}
+var error_msg = ...;
+if (!global_flag_2) {
+	show_error(error_msg, true); // (sort of)
+	exit(-1);
+}
+</pre><p>
+			where <code>exit</code> is <a href="http://www.cplusplus.com/reference/cstdlib/exit/">stdlib.h exit</a> -
+			it immediately and unconditionally causes the game process to quit.
+			Obviously, a minor inconvenience for queuing errors, as it queues the error but then
+			your game closes.
+			</p><p>
+			To make things better, there is no way of knowing that your error comes from such a
+			source, as the function is small enough to get optimized and not appear in low-level
+			<a href="https://en.wikipedia.org/wiki/Call_stack">call stack</a> at all.
+			</p><p>
+			However, I've found that <code>global_flag_2</code> is also referenced inside <code>show_error</code>, thus
+			was able to add a pair of functions to flip it back and forth, which means that you
+			can omit any such errors, but can't queue their messages (because the function quits early).
+			</p><p>
+			This might be addressed in future.
+		</p></article></section><section><header id="catch_error_set_newer"><a href="#catch_error_set_newer" title="(permalink)">catch_error_set_newer(mode)</a></header><article><p>
+			Defines how newer-format fatal errors should be treated.
+			</p><p>
+			<code>mode</code> can be the following:
+			</p><section><header id="catch_error_newer_allow"><a href="#catch_error_newer_allow" title="(permalink)">catch_error_newer_allow</a></header><article><p>
+				Allows newer-format fatal errors to dispatch (default GM behaviour).
+				</p><p>
+				As per above, if you are queuing/ignoring fatal errors, this will still result
+				in your game ending.
+				</p><p>
+				Otherwise these are the same as regular fatal errors and will trigger the rest
+				of the helper functions their way out.
+			</p></article></section><section><header id="catch_error_newer_ignore"><a href="#catch_error_newer_ignore" title="(permalink)">catch_error_newer_ignore</a></header><article><p>
+				Suppresses newer-format fatal errors completely - your game won't quit, but also
+				the errors won't get added to the queue.
+				</p><p>
+				As per above, on non-YYC newer-format errors skip to the end of the current script/event, which can
+				be a good or a bad thing, depending on what you are trying to do.
+			</p></article></section></article></section><section><header id="catch_error_get_newer"><a href="#catch_error_get_newer" title="(permalink)">catch_error_get_newer()&#8203;<span class="ret-arrow">&#10140;</span>catch_error_newer_</a></header><article><p>
+			Returns the current mode for newer-format fatal errors.
+			</p><p>
+			Aside of the default constants, the return value can be:
+			</p><section><header id="catch_error_newer_not_ready"><a href="#catch_error_newer_not_ready" title="(permalink)">catch_error_newer_not_ready</a></header><article><p>
+				No fatal errors were requested for <a href="#catch_error_fatal_ignore">ignoring</a>
+				/ <a href="#catch_error_fatal_queue">queuing</a> yet nor was
+				<a href="#catch_error_set_newer">catch_error_set_newer</a> called, so we don't know yet if we can ignore them or not.
+			</p></article></section><section><header id="catch_error_newer_unavailable"><a href="#catch_error_newer_unavailable" title="(permalink)">catch_error_newer_unavailable</a></header><article><p>
+				The global flag required to make this feature work couldn't be found.
+				</p><p>
+				Obviously, this is something that can only change upon GM updates,
+				so you wouldn't usually need to check for this at all.
+			</p></article></section></article></section></article></section><section><header id="catch_error_queue_"><a href="#catch_error_queue_" title="(permalink)">Error queues</a></header><article><p>
+		If you've requested your errors to be queued, you can later retrieve them.
+		</p><section><header id="catch_error_dequeue"><a href="#catch_error_dequeue" title="(permalink)">catch_error_dequeue()&#8203;<span class="ret-arrow">&#10140;</span>error_text</a></header><article><p>
+			If non-fatal error handling is set to <a href="#catch_error_normal_queue">catch_error_normal_queue</a>,
+			this function returns the next stored error message from the queue.
+			</p><p>
+			If there are no more error messages left, returns <code>""</code>.
+			</p><p>
+			Example:
+			</p><pre>
+catch_error_init();
+catch_error_set_normal(catch_error_normal_queue);
+show_error("1!", false);
+show_error("2!", false);
+var s = catch_error_dequeue();
+while (s != "") {
+	s = string_replace_all(s, "#", chr(92)+"#"); // GMS1 only - escape "#"s
+	show_message("Error: " + chr(13) + chr(10) + s);
+	s = catch_error_dequeue();
+}
+</pre><p>
+			This would display two dialog boxes with caught error messages in order.
+		</p></article></section><section><header id="catch_error_size"><a href="#catch_error_size" title="(permalink)">catch_error_size()&#8203;<span class="ret-arrow">&#10140;</span>size</a></header><article><p>
+			Returns the current number of queued error messages.
+			</p><p>
+			Example:
+			</p><pre>
+catch_error_init();
+catch_error_set_normal(catch_error_normal_queue);
+show_error("1!", false);
+show_error("2!", false);
+show_debug_message(catch_error_size()); // 2
+</pre></article></section><section><header id="catch_error_clear"><a href="#catch_error_clear" title="(permalink)">catch_error_clear()&#8203;<span class="ret-arrow">&#10140;</span>old_size</a></header><article><p>
+			Clears the error message queue and returns how many messages there were in it.
+			Example:
+			</p><pre>
+catch_error_init();
+catch_error_set_normal(catch_error_normal_queue);
+show_error("1!", false);
+show_error("2!", false);
+show_debug_message(catch_error_size()); // 2
+catch_error_clear();
+show_debug_message(catch_error_size()); // 0
+</pre></article></section></article></section><section><header id="catch_error_dump_"><a href="#catch_error_dump_" title="(permalink)">Dumps upon error exit</a></header><article><p>
+		When your game exits due to an error (user-initiated or automatic via <code>_quit</code>),
+		you can opt in to save the last error message to a file.
+		</p><p>
+		You can later access that file from in-game (if you saved it on a relative path)
+		or external software.
+		</p><section><header id="catch_error_set_dump_path"><a href="#catch_error_set_dump_path" title="(permalink)">catch_error_set_dump_path(?path)</a></header><article><p>
+			Changes the current log file path.
+			</p><p>
+			Call with no arguments (or <code>""</code>) to disable.
+			</p><p>
+			Example:
+			</p><pre>
+catch_error_init();
+catch_error_set_fatal(catch_error_fatal_quit);
+catch_error_set_dump_path("error.log");
+show_error("oh no", true); // quietly saves the error to `error.log` and exits
+</pre></article></section><section><header id="catch_error_get_dump_path"><a href="#catch_error_get_dump_path" title="(permalink)">catch_error_get_dump_path()&#8203;<span class="ret-arrow">&#10140;</span>path</a></header><article><p>
+			Returns the current log file path
+		</p></article></section></article></section><section><header id="catch_error_exec_"><a href="#catch_error_exec_" title="(permalink)">Executing external programs upon error exit</a></header><article><p>
+		You can opt in to execute an external program when your game exits due to an error.
+		This can be used to open an error reporting tool, error log location, or even restart
+		the game and show the options in-game.
+		</p><section><header id="catch_error_set_exec"><a href="#catch_error_set_exec" title="(permalink)">catch_error_set_exec(?path, ?params)</a></header><article><p>
+			<code>path</code> is an <b>absolute</b> (<code>C:/...</code>, etc.) path to application to be ran.
+			</p><p>
+			<code>params</code> is a string of parameters to pass to the application.
+			</p><p>
+			If called without arguments, reverts to not running anything.
+			</p><p>
+			Example:
+			</p><pre>
+catch_error_init();
+catch_error_set_prompt(catch_error_prompt_question,
+	"We've hit an error. Would you like to restart the app?",
+	"Oh no,");
+// let the game restart on error:
+var argv = "", argc = parameter_count();
+for (var i = 1; i &lt; argc; i++) {
+	if (i &gt; 1) argv += " ";
+	var v = parameter_string(i);
+	if (string_pos(" ", v)) argv += '"' + v + '"'; else argv += v;
+}
+catch_error_exec(parameter_string(0), argv);
+//
+show_error("oh no", true); // shows the restart question prompt
+</pre></article></section><section><header id="catch_error_get_exec_path"><a href="#catch_error_get_exec_path" title="(permalink)">catch_error_get_exec_path()&#8203;<span class="ret-arrow">&#10140;</span>path</a></header><article></article></section><section><header id="catch_error_get_exec_params"><a href="#catch_error_get_exec_params" title="(permalink)">catch_error_get_exec_params()&#8203;<span class="ret-arrow">&#10140;</span>parameters</a></header><article></article></section></article></section><section><header id="Custom-error-prompt-upon-error-exit"><a href="#Custom-error-prompt-upon-error-exit" title="(permalink)">Custom error prompt upon error exit</a></header><article><p>
+		You can show a dialog box prior to the game exiting (and
+		error handler application being ran, if any).
+		If you're choosing to let your game restart on error, this is a little more clear to the
+		user than the game just suddenly restarting.
+		</p><section><header id="catch_error_set_prompt"><a href="#catch_error_set_prompt" title="(permalink)">catch_error_set_prompt(kind, ?message, ?title, ?messageBoxType)</a></header><article><p>
+			<code>kind</code> (required) can be one of the following:
+			</p><section><header id="catch_error_prompt_none"><a href="#catch_error_prompt_none" title="(permalink)">catch_error_prompt_none</a></header><article><p>
+				Default - doesn't show any prompts.<br/>
+				When using this, other arguments can be omitted.
+			</p></article></section><section><header id="catch_error_prompt_message"><a href="#catch_error_prompt_message" title="(permalink)">catch_error_prompt_message</a></header><article><p>
+				Shows a message box with an OK button.
+			</p></article></section><section><header id="catch_error_prompt_question"><a href="#catch_error_prompt_question" title="(permalink)">catch_error_prompt_question</a></header><article><p>
+				Shows a message box with Yes/No buttons.<br/>
+				If the user answers "no", application chosen via <a href="#catch_error_exec">catch_error_exec</a> will not be ran.
+			</p></article></section><p>
+			<code>message</code> (optional) is the content of the message box.<br/>
+			This is where you tell the user that you regret to inform that the game/app encountered a
+			serious error and will now close.
+			</p><p>
+			<code>title</code> (optional) is the caption of the message box.<br/>
+			If not specified, will be blank (<code>""</code>).
+			</p><p>
+			<code>messageBoxType</code> (optional) is what is called <code>uType</code> on
+			<a href="https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-messagebox#parameters">this MSDN page</a>.<br/>
+			This allows you to further customize the looks of the dialog box.<br/>
+			<code>0x00000010L</code> is <code>0x00000010</code> in GMS2 (no L) or <code>$00000010</code> in GMS2 (no L; $ prefix).<br/>
+			Leaving out this parameter will not change the existing flags.<br/>
+			Base "type" (<code>MB_OK</code>/<code>MB_YESNO</code>) is automatically filled out based on <code>kind</code> argument.
+			</p><p>
+			Example:
+			</p><pre>
+catch_error_init();
+catch_error_set_prompt(catch_error_prompt_message,
+	"We regret to inform that the game encountered a fatal error and will now close.",
+	"Error");
+</pre><p>
+			for example of <a href="#catch_error_prompt_question">catch_error_prompt_question</a>, see <a href="#catch_error_exec">catch_error_exec</a>.
+		</p></article></section><section><header id="catch_error_get_prompt_kind"><a href="#catch_error_get_prompt_kind" title="(permalink)">catch_error_get_prompt_kind()&#8203;<span class="ret-arrow">&#10140;</span>kind</a></header><article></article></section><section><header id="catch_error_get_prompt_text"><a href="#catch_error_get_prompt_text" title="(permalink)">catch_error_get_prompt_text()&#8203;<span class="ret-arrow">&#10140;</span>message</a></header><article></article></section><section><header id="catch_error_get_prompt_title"><a href="#catch_error_get_prompt_title" title="(permalink)">catch_error_get_prompt_title()&#8203;<span class="ret-arrow">&#10140;</span>title</a></header><article></article></section><section><header id="catch_error_get_prompt_flags"><a href="#catch_error_get_prompt_flags" title="(permalink)">catch_error_get_prompt_flags()&#8203;<span class="ret-arrow">&#10140;</span>messageBoxType_flags</a></header><article></article></section></article></section></article></section><section><header id="faq"><a href="#faq" title="(permalink)">FAQ</a></header><article><section><header id="faq-how"><a href="#faq-how" title="(permalink)">How does this work?</a></header><article><p>
+		The extension works by "catching" and operating the built-in error box.
+		</p><p>
+		While the implementation details are full of unexciting low-level WinAPI nonsense
+		(which is probably the reason why no one did this yet),
+		the gist is as following - the DLL steps in as a dialogue box processor,
+		gets the information from the GameMaker runtime, and then evaluates what to do
+		(show the actual dialog, store error, exit game...) based on instructions provided
+		via <a href="#catch_error_">the functions</a>.
+		</p><p>
+		Those who are brave can take a look at the <a href="https://github.com/YAL-GameMaker/catch_error">source code</a>.
+	</p></article></section><section><header id="faq-platforms"><a href="#faq-platforms" title="(permalink)">What platforms are supported?</a></header><article><p>
+		The extension works on Windows and Windows (YYC)
+		in both GameMaker: Studio and GameMaker Studio 2.
+		</p><p>
+		While it is possible that additional platforms will be supported in future,
+		each would require a completely different implementation,
+		and differ in features (for instance, you cannot launch any apps on mobile/consoles/HTML5),
+		so it would be unwise to make any particular promises here.
+	</p></article></section><section><header id="faq-catch"><a href="#faq-catch" title="(permalink)">What errors are caught?</a></header><article><p>
+		The extension works for any errors that result in a familiar "code error" box.
+		</p><p>
+		It cannot catch access violations
+		(or other low-level errors that cause a "&lt;name&gt; has stopped working" Windows message)
+		as these halt execution abruptly.
+		</p><p>
+		This may be partially addressed in future (to allow the game to be restarted in such scenario),
+		but there isn't much information that you can gather in such case.
+	</p></article></section><section><header id="faq-try-catch"><a href="#faq-try-catch" title="(permalink)">Can you use this as try-catch?</a></header><article><p>
+		If Windows is the only platform of concern,
+		absolutely - <a href="#catch_error_clear">clear</a> the queue before performing something problematic,
+		then check it's size/contents after finishing.
+	</p></article></section></article></section></p><!--doc>-->
+</section></main></div>
+<script type="text/javascript">(function() {
+	var doc, headers;
+	//
+	var path = "catch_error documentation";
+	var state = null;
+	if (window.localStorage && JSON.parse) {
+		state = window.localStorage.getItem(path);
+		state = state ? JSON.parse(state) : { };
+		if (state == null) state = { };
+	}
+	var isLocal = (location.host.indexOf("localhost") == 0);
+	//
+	function h3bind(h3) {
+		var node = h3.parentNode;
+		var snip = node.children[1];
+		var id = h3.id || h3.textContent;
+		h3.snip = snip;
+		h3.doc_set = function(z) {
+			if (z) node.classList.add("open"); else node.classList.remove("open");
+			if (state) {
+				state[id] = z;
+				window.localStorage.setItem(path, JSON.stringify(state));
+			}
+		}
+		h3.doc_hide = function() {
+			this.doc_set(false);
+		}
+		h3.doc_show = function() {
+			this.doc_set(true);
+		}
+		h3.onclick = function(_) {
+			var seen = !node.classList.contains("open");
+			h3.doc_set(seen);
+			return false;
+		};
+	}
+	function getHashFunc(id) {
+		var node = document.getElementById(id);
+		if (node == null) return null;
+		return function(e) {
+			while (node && node != doc) {
+				if (node.classList.contains("item")) {
+					node.classList.add("open");
+				}
+				node = node.parentElement;
+			}
+		};
+	}
+	// Display helpers:
+	window.opt_none = function() {
+		for (var li = 0; li < headers.length; li++) headers[li].doc_hide();
+	};
+	window.opt_list = function() {
+		for (var li = 0; li < headers.length; li++) {
+			var h3 = headers[li];
+			if (h3.parentNode.parentNode != doc) {
+				h3.doc_hide();
+			} else h3.doc_show();
+		}
+	};
+	window.opt_all = function() {
+		for (var li = 0; li < headers.length; li++) headers[li].doc_show();
+	};
+	window.live_post = function() {
+		doc = document.getElementById("doc");
+		headers = doc.getElementsByTagName("header");
+		//
+		for (var i = 0; i < headers.length; i++) h3bind(headers[i]);
+		// Clicks in document expand the related section:
+		var anchors = doc.getElementsByTagName("a");
+		for (var i = 0; i < anchors.length; i++) {
+			var anchor = anchors[i];
+			if (anchor.classList.contains("header")) continue;
+			var href = anchor.getAttribute("href");
+			if (href[0] == "#") {
+				var fn = getHashFunc(href.substr(1));
+				if (!fn) {
+					anchor.classList.add("broken");
+					anchor.title = "(section missing)";
+				} else anchor.addEventListener("click", fn);
+			}
+		}
+		//
+		for (var li = 0; li < headers.length; li++) {
+			var h3 = headers[li];
+			var val = state ? state[h3.id || h3.textContent] : null;
+			if (val == null) val = isLocal || h3.parentNode.parentNode == doc;
+			if (val) h3.doc_show(); else h3.doc_hide();
+		}
+	};
+	window.live_post();
+	//
+	(function() {
+		var hash = document.location.hash;
+		if (hash) {
+			var _hash = hash.substr(1);
+			getHashFunc(_hash)();
+			setTimeout(function() {
+				document.location.hash = hash + " ";
+				setTimeout(function() {
+					document.location.hash = hash;
+				}, 100);
+			}, 100);
+		}
+	})();
+	//
+	doc.setAttribute("ready", "");
+	})();</script>
+</body></html>

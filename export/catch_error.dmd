@@ -1,0 +1,394 @@
+```set template default.html```
+```set autoapi ext```
+```gmlapi fnames2```
+```set title catch_error documentation```
+```set mainclass boxtt```
+```set url https://yal.cc/r/19/catch_error/```
+```set desc
+catch_error is an extension that brings error handling to GameMaker versions from days before error handling.
+```
+```set intro
+This is a function "cheat sheet" for the catch_error extension by YellowAfterlife.\
+The extension can be acquired via [itch.io](https://yellowafterlife.itch.io/gamemaker-catch_error).\
+A most up-to-date version of the manual is always [available online](https://yal.cc/docs/gm/catch_error/).
+
+*NOTE:* Current (GMS≥2.3) versions of GameMaker now have native error handling
+(try-catch, exception_unhandler_handler) - this extension is no longer necessary.
+```
+#[General functions] {
+	#[catch_error_init()]() {
+		Should be called for any other functions to have any effect.
+		
+		Returns whether successful (`> 0`).
+		
+		Generally, can only fail is the DLL is missing/failed to load.
+	}
+	#[catch_error_is_ready()]() {
+		Returns whether the initialization is done and everything is good to go.
+	}
+	#[catch_error_is_loaded()]() {
+		Returns whether the DLL is successfully loaded.
+		
+		If this is false, it is either missing entirely or the user has some serious setup issues.
+	}
+}
+#[Error handling](catch_error_) {
+	#[Normal errors](catch_error_normal_) {
+		"Normal" errors are the ones that have an "ignore" button in their dialog.
+		
+		These are captured consistently and pretty future-proof -
+		the only way the capture mechanism
+		could break is if error dialog handling gets rewritten completely.
+		#[catch_error_set_normal(mode)]() {
+			Defines how non-fatal errors should be treated.
+			
+			`mode` can be the following:
+			#[catch_error_normal_show]() {
+				Shows the error box (default GM behaviour)
+			}
+			#[catch_error_normal_quit]() {
+				Treats non-fatal errors as fatal
+			}
+			#[catch_error_normal_ignore]() {
+				Ignores non-fatal errors completely
+			}
+			#[catch_error_normal_queue]() {
+				Stores non-fatal errors for retrieval via [catch_error_dequeue].
+			}
+			
+			Examples:
+			```
+			catch_error_init();
+			//
+			catch_error_set_normal(catch_error_normal_ignore);
+			show_error("1!", false); // (absolutely nothing happens)
+			//
+			catch_error_set_normal(catch_error_normal_queue);
+			show_error("2!", false);
+			show_debug_message("Last error: " + catch_error_dequeue());
+			//
+			catch_error_set_normal(catch_error_normal_show);
+			show_error("3!", false); // (a normal error box appears)
+			//
+			catch_error_set_normal(catch_error_normal_quit);
+			catch_error_set_prompt(catch_error_prompt_message, "It would appear like we've crashed");
+			show_error("4!", false); // (a dialog box with above text appears)
+			```
+		}
+		#[catch_error_get_normal()]() {
+			Returns the current mode for normal errors (as per constants).
+		}
+	}
+	#[Fatal errors](catch_error_fatal_) {
+		"Fatal" errors are the ones that do not have an "ignore" button in their dialogs.
+		
+		Usually these put an end to your game, and you could let that happen
+		(either letting them show or passing them to a log file/external app, skipping the error box),
+		but the extension also offers an option to catch fatal errors as well.
+		
+		#[catch_error_set_fatal(mode)]() {
+			Defines how fatal errors should be treated.
+			
+			`mode` can be the following:
+			#[catch_error_fatal_show]() {
+				Shows the error box (default GM behaviour)
+			}
+			#[catch_error_fatal_quit]() {
+				Skips the message box
+			}
+			#[catch_error_fatal_ignore]() {
+				Ignores fatal errors completely
+			}
+			#[catch_error_fatal_queue]() {
+				Stores fatal errors for retrieval via [catch_error_dequeue].
+			}
+			Treating fatal errors as non-fatal is obviously a little more experimental.
+			While my tests indicate that the approach works with a variety of GMS/GMS2 versions
+			released in past two years, I would expect this to break once GMS2 gets built-in error
+			handling. But also, you wouldn't need this feature once that's a thing.
+			
+			Example:
+			```
+			catch_error_init();
+			catch_error_set_fatal(catch_error_fatal_quit);
+			catch_error_set_dump_path("error.log");
+			show_error("oh no", true); // quietly saves the error to `error.log` and exits
+			```
+		}
+		#[catch_error_get_fatal(mode)]() {
+			Returns the current mode for fatal errors (as per constants).
+		}
+	}
+	#[Newer-format fatal errors](catch_error_newer_) {
+		*Note:* as of 1.0.1 / Feb 10, 2019 update newer-format errors are handled together with
+		normal fatal errors, but you can still use these functions if you want to ignore them
+		entirely for some reason.
+		#[Explanation](catch_error_newer_explain) {
+			So, here's a thing: recent (~2018) versions of GM:S/GMS2 have a _third_ way of throwing errors.
+			If you've ever taken a peek at YYC `YYGML.h`, it's called `YYError` there.
+			
+			It is used for "low-level" actions (like `+` or `inst.vari`) and a random few built-in
+			functions (like `vertex_begin`).
+			
+			The deal with it is that its code goes like this (pseudocode):
+			```txt
+			global_flag_1 = true;
+			if (global_flag_2) {
+				// (skip to the end of the current script/event if not using YYC)
+				return;
+			}
+			var error_msg = ...;
+			if (!global_flag_2) {
+				show_error(error_msg, true); // (sort of)
+				exit(-1);
+			}
+			```
+			where `exit` is [stdlib.h exit](http://www.cplusplus.com/reference/cstdlib/exit/) -
+			it immediately and unconditionally causes the game process to quit.
+			Obviously, a minor inconvenience for queuing errors, as it queues the error but then
+			your game closes.
+			
+			To make things better, there is no way of knowing that your error comes from such a
+			source, as the function is small enough to get optimized and not appear in low-level
+			[call stack](https://en.wikipedia.org/wiki/Call_stack) at all.
+			
+			However, I've found that `global_flag_2` is also referenced inside `show_error`, thus
+			was able to add a pair of functions to flip it back and forth, which means that you
+			can omit any such errors, but can't queue their messages (because the function quits early).
+			
+			This might be addressed in future.
+		}
+		#[catch_error_set_newer(mode)]() {
+			Defines how newer-format fatal errors should be treated.
+			
+			`mode` can be the following:
+			#[catch_error_newer_allow]() {
+				Allows newer-format fatal errors to dispatch (default GM behaviour).
+				
+				As per above, if you are queuing/ignoring fatal errors, this will still result
+				in your game ending.
+				
+				Otherwise these are the same as regular fatal errors and will trigger the rest
+				of the helper functions their way out.
+			}
+			#[catch_error_newer_ignore]() {
+				Suppresses newer-format fatal errors completely - your game won't quit, but also
+				the errors won't get added to the queue.
+				
+				As per above, on non-YYC newer-format errors skip to the end of the current script/event, which can
+				be a good or a bad thing, depending on what you are trying to do.
+			}
+		}
+		#[catch_error_get_newer()->catch_error_newer_]() {
+			Returns the current mode for newer-format fatal errors.
+			
+			Aside of the default constants, the return value can be:
+			#[catch_error_newer_not_ready]() {
+				No fatal errors were requested for [ignoring](catch_error_fatal_ignore)
+				/ [queuing](catch_error_fatal_queue) yet nor was
+				[catch_error_set_newer] called, so we don't know yet if we can ignore them or not.
+			}
+			#[catch_error_newer_unavailable]() {
+				The global flag required to make this feature work couldn't be found.
+				
+				Obviously, this is something that can only change upon GM updates,
+				so you wouldn't usually need to check for this at all.
+			}
+		}
+	}
+	#[Error queues](catch_error_queue_) {
+		If you've requested your errors to be queued, you can later retrieve them.
+		#[catch_error_dequeue()->error_text]() {
+			If non-fatal error handling is set to [catch_error_normal_queue],
+			this function returns the next stored error message from the queue.
+			
+			If there are no more error messages left, returns `""`.
+			
+			Example:
+			```
+			catch_error_init();
+			catch_error_set_normal(catch_error_normal_queue);
+			show_error("1!", false);
+			show_error("2!", false);
+			var s = catch_error_dequeue();
+			while (s != "") {
+				s = string_replace_all(s, "#", chr(92)+"#"); // GMS1 only - escape "#"s
+				show_message("Error: " + chr(13) + chr(10) + s);
+				s = catch_error_dequeue();
+			}
+			```
+			This would display two dialog boxes with caught error messages in order.
+		}
+		#[catch_error_size()->size]() {
+			Returns the current number of queued error messages.
+			
+			Example:
+			```
+			catch_error_init();
+			catch_error_set_normal(catch_error_normal_queue);
+			show_error("1!", false);
+			show_error("2!", false);
+			show_debug_message(catch_error_size()); // 2
+			```
+		}
+		#[catch_error_clear()->old_size]() {
+			Clears the error message queue and returns how many messages there were in it.
+			Example:
+			```
+			catch_error_init();
+			catch_error_set_normal(catch_error_normal_queue);
+			show_error("1!", false);
+			show_error("2!", false);
+			show_debug_message(catch_error_size()); // 2
+			catch_error_clear();
+			show_debug_message(catch_error_size()); // 0
+			```
+		}
+	}
+	#[Dumps upon error exit](catch_error_dump_) {
+		When your game exits due to an error (user-initiated or automatic via `_quit`),
+		you can opt in to save the last error message to a file.
+		
+		You can later access that file from in-game (if you saved it on a relative path)
+		or external software.
+		#[catch_error_set_dump_path(?path)]() {
+			Changes the current log file path.
+			
+			Call with no arguments (or `""`) to disable.
+			
+			Example:
+			```
+			catch_error_init();
+			catch_error_set_fatal(catch_error_fatal_quit);
+			catch_error_set_dump_path("error.log");
+			show_error("oh no", true); // quietly saves the error to `error.log` and exits
+			```
+		}
+		#[catch_error_get_dump_path()->path]() {
+			Returns the current log file path
+		}
+	}
+	#[Executing external programs upon error exit](catch_error_exec_) {
+		You can opt in to execute an external program when your game exits due to an error.
+		This can be used to open an error reporting tool, error log location, or even restart
+		the game and show the options in-game.
+		
+		#[catch_error_set_exec(?path, ?params)]() {
+			`path` is an *absolute* (`C:/...`, etc.) path to application to be ran.
+			
+			`params` is a string of parameters to pass to the application.
+			
+			If called without arguments, reverts to not running anything.
+			
+			Example:
+			```
+			catch_error_init();
+			catch_error_set_prompt(catch_error_prompt_question,
+				"We've hit an error. Would you like to restart the app?",
+				"Oh no,");
+			// let the game restart on error:
+			var argv = "", argc = parameter_count();
+			for (var i = 1; i < argc; i++) {
+				if (i > 1) argv += " ";
+				var v = parameter_string(i);
+				if (string_pos(" ", v)) argv += '"' + v + '"'; else argv += v;
+			}
+			catch_error_exec(parameter_string(0), argv);
+			//
+			show_error("oh no", true); // shows the restart question prompt
+			```
+		}
+		#[catch_error_get_exec_path()->path]() {
+			
+		}
+		#[catch_error_get_exec_params()->parameters]() {
+			
+		}
+	}
+	#[Custom error prompt upon error exit]() {
+		You can show a dialog box prior to the game exiting (and
+		error handler application being ran, if any).
+		If you're choosing to let your game restart on error, this is a little more clear to the
+		user than the game just suddenly restarting.
+		#[catch_error_set_prompt(kind, ?message, ?title, ?messageBoxType)]() {
+			
+			`kind` (required) can be one of the following:
+			#[catch_error_prompt_none]() {
+				Default - doesn't show any prompts.\
+				When using this, other arguments can be omitted.
+			}
+			#[catch_error_prompt_message]() {
+				Shows a message box with an OK button.
+			}
+			#[catch_error_prompt_question]() {
+				Shows a message box with Yes/No buttons.\
+				If the user answers "no", application chosen via [catch_error_exec] will not be ran.
+			}
+			
+			`message` (optional) is the content of the message box.\
+			This is where you tell the user that you regret to inform that the game/app encountered a
+			serious error and will now close.
+			
+			`title` (optional) is the caption of the message box.\
+			If not specified, will be blank (`""`).
+			
+			`messageBoxType` (optional) is what is called `uType` on
+			[this MSDN page](https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-messagebox#parameters).\
+			This allows you to further customize the looks of the dialog box.\
+			`0x00000010L` is `0x00000010` in GMS2 (no L) or `$00000010` in GMS2 (no L; $ prefix).\
+			Leaving out this parameter will not change the existing flags.\
+			Base "type" (`MB_OK`/`MB_YESNO`) is automatically filled out based on `kind` argument.
+			
+			Example:
+			```
+			catch_error_init();
+			catch_error_set_prompt(catch_error_prompt_message,
+				"We regret to inform that the game encountered a fatal error and will now close.",
+				"Error");
+			```
+			for example of [catch_error_prompt_question], see [catch_error_exec].
+		}
+		#[catch_error_get_prompt_kind()->kind]() {}
+		#[catch_error_get_prompt_text()->message]() {}
+		#[catch_error_get_prompt_title()->title]() {}
+		#[catch_error_get_prompt_flags()->messageBoxType_flags]() {}
+	}
+}
+#[FAQ](faq) {
+	#[How does this work?](faq-how) {
+		The extension works by "catching" and operating the built-in error box.
+		
+		While the implementation details are full of unexciting low-level WinAPI nonsense
+		(which is probably the reason why no one did this yet),
+		the gist is as following - the DLL steps in as a dialogue box processor,
+		gets the information from the GameMaker runtime, and then evaluates what to do
+		(show the actual dialog, store error, exit game...) based on instructions provided
+		via [the functions](catch_error_).
+		
+		Those who are brave can take a look at the [source code](https://github.com/YAL-GameMaker/catch_error).
+	}
+	#[What platforms are supported?](faq-platforms) {
+		The extension works on Windows and Windows (YYC)
+		in both GameMaker: Studio and GameMaker Studio 2.
+		
+		While it is possible that additional platforms will be supported in future,
+		each would require a completely different implementation,
+		and differ in features (for instance, you cannot launch any apps on mobile/consoles/HTML5),
+		so it would be unwise to make any particular promises here.
+	}
+	#[What errors are caught?](faq-catch) {
+		The extension works for any errors that result in a familiar "code error" box.
+		
+		It cannot catch access violations
+		(or other low-level errors that cause a "<name> has stopped working" Windows message)
+		as these halt execution abruptly.
+		
+		This may be partially addressed in future (to allow the game to be restarted in such scenario),
+		but there isn't much information that you can gather in such case.
+	}
+	#[Can you use this as try-catch?](faq-try-catch) {
+		If Windows is the only platform of concern,
+		absolutely - [clear](catch_error_clear) the queue before performing something problematic,
+		then check it's size/contents after finishing.
+	}
+}
